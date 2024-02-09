@@ -186,7 +186,7 @@ class SparqlQuery {
     private string $liteSparqlQuery = 'SELECT distinct ?item ?itemLabel ?investigationDate
         ?residenceLabel ?residenceCoords ?sexLabel ?link ?occupationLabel ?socialClassificationLabel
         ?placeOfDeathLabel ?placeOfDeathCoords ?mannerOfDeathLabel ?detentionLocationLabel ?detentionLocationCoords
-        ?investigationStart ?investigationEnd
+        ?investigationStart ?investigationEnd ?investigationStartPrecision ?investigationEndPrecision
        
         WHERE
         {
@@ -236,21 +236,26 @@ class SparqlQuery {
           #### INVESTIGATION ####
   
           OPTIONAL {
-            ?investigation wdt:P921 ?item .
-            ?investigation wdt:P31 wd:Q66458810 ;
-                           wdt:P580|wdt:P585 ?investigationStart ;
-            OPTIONAL { ?investigation wdt:P582 ?investigationEnd } .
+             ?investigation wdt:P921 ?item .
+             ?investigation wdt:P31 wd:Q66458810 ;
+                            wdt:P580|wdt:P585 ?investigationStart ;
+                            OPTIONAL { ?investigation wdt:P582 ?investigationEnd } .
+             OPTIONAL {?investigation p:P580/psv:P580 [ wikibase:timePrecision ?investigationStartPrecision ] }.
+             
+             OPTIONAL {?investigation p:P582/psv:P582 [ wikibase:timePrecision ?investigationEndPrecision ] } .
+            
           }
         }
         
         GROUP BY ?item ?itemLabel ?investigationDate ?residenceLabel ?residenceCoords ?sexLabel ?link ?trialLabel
         ?occupationLabel ?socialClassificationLabel ?placeOfDeathLabel ?placeOfDeathCoords ?mannerOfDeathLabel
-        ?detentionLocationLabel ?detentionLocationCoords ?investigation ?investigationStart ?investigationEnd';
+        ?detentionLocationLabel ?detentionLocationCoords ?investigation ?investigationStart ?investigationEnd
+        ?investigationStartPrecision ?investigationEndPrecision ';
 
     private string $primarySecondarySparqlQuery = 'SELECT distinct ?item ?itemLabel ?investigationDate
         ?residenceLabel ?residenceCoords ?sexLabel ?link ?occupationLabel ?socialClassificationLabel
         ?placeOfDeathLabel ?placeOfDeathCoords ?mannerOfDeathLabel ?detentionLocationLabel ?detentionLocationCoords
-        ?investigationStart ?investigationEnd
+        ?investigationStart ?investigationEnd  ?investigationStartPrecision ?investigationEndPrecision
         
         (GROUP_CONCAT(DISTINCT ?includingLabelQual; separator=\' | \') as ?including)
         
@@ -302,10 +307,14 @@ class SparqlQuery {
           #### INVESTIGATION ####
         
           OPTIONAL {
-            ?investigation wdt:P921 ?item .
-            ?investigation wdt:P31 wd:Q66458810 ;
-                           wdt:P580|wdt:P585 ?investigationStart ;
-            OPTIONAL { ?investigation wdt:P582 ?investigationEnd }
+             ?investigation wdt:P921 ?item .
+             ?investigation wdt:P31 wd:Q66458810 ;
+                            wdt:P580|wdt:P585 ?investigationStart ;
+                            OPTIONAL { ?investigation wdt:P582 ?investigationEnd } .
+             OPTIONAL {?investigation p:P580/psv:P580 [ wikibase:timePrecision ?investigationStartPrecision ] }.
+             
+             OPTIONAL {?investigation p:P582/psv:P582 [ wikibase:timePrecision ?investigationEndPrecision ] } .
+            
        
             OPTIONAL {
               ?investigation p:P1012 ?includingNode .
@@ -328,12 +337,13 @@ class SparqlQuery {
         
         GROUP BY ?item ?itemLabel ?investigationDate ?residenceLabel ?residenceCoords ?sexLabel ?link ?trialLabel
         ?occupationLabel ?socialClassificationLabel ?placeOfDeathLabel ?placeOfDeathCoords ?mannerOfDeathLabel
-        ?detentionLocationLabel ?detentionLocationCoords ?investigation ?investigationStart ?investigationEnd';
+        ?detentionLocationLabel ?detentionLocationCoords ?investigation ?investigationStart ?investigationEnd
+        ?investigationStartPrecision ?investigationEndPrecision';
 
     private string $meetingsSparqlQuery = 'SELECT distinct ?item ?itemLabel ?investigationDate
         ?residenceLabel ?residenceCoords ?sexLabel ?link ?occupationLabel ?socialClassificationLabel
         ?placeOfDeathLabel ?placeOfDeathCoords ?mannerOfDeathLabel ?detentionLocationLabel ?detentionLocationCoords
-        ?investigationStart ?investigationEnd
+        ?investigationStart ?investigationEnd ?investigationStartPrecision ?investigationEndPrecision
         
         (GROUP_CONCAT(DISTINCT ?qualityWithQualifier; separator=\' | \') as ?qualities)
         (GROUP_CONCAT(DISTINCT ?meetingLocation; separator=\' | \') as ?meetingLocations)
@@ -386,11 +396,14 @@ class SparqlQuery {
         
            #### INVESTIGATION ####
         
-          OPTIONAL {
-            ?investigation wdt:P921 ?item .
-            ?investigation wdt:P31 wd:Q66458810 ;
-                           wdt:P580|wdt:P585 ?investigationStart ;
-            OPTIONAL { ?investigation wdt:P582 ?investigationEnd }
+           OPTIONAL {
+             ?investigation wdt:P921 ?item .
+             ?investigation wdt:P31 wd:Q66458810 ;
+                            wdt:P580|wdt:P585 ?investigationStart ;
+                            OPTIONAL { ?investigation wdt:P582 ?investigationEnd } .
+             OPTIONAL {?investigation p:P580/psv:P580 [ wikibase:timePrecision ?investigationStartPrecision ] }.
+             
+             OPTIONAL {?investigation p:P582/psv:P582 [ wikibase:timePrecision ?investigationEndPrecision ] } .
         
             # QUALITY (COPY THIS FOR MULTIPLE VALUE, WITH qualifier)
             OPTIONAL {
@@ -426,12 +439,13 @@ class SparqlQuery {
         
         GROUP BY ?item ?itemLabel ?investigationDate ?residenceLabel ?residenceCoords ?sexLabel ?link ?trialLabel
         ?occupationLabel ?socialClassificationLabel ?placeOfDeathLabel ?placeOfDeathCoords ?mannerOfDeathLabel
-        ?detentionLocationLabel ?detentionLocationCoords ?investigation ?investigationStart ?investigationEnd';
+        ?detentionLocationLabel ?detentionLocationCoords ?investigation ?investigationStart ?investigationEnd
+        ?investigationStartPrecision ?investigationEndPrecision';
 
     private string $ritualSparqlQuery = 'SELECT distinct ?item ?itemLabel ?investigationDate
         ?residenceLabel ?residenceCoords ?sexLabel ?link ?occupationLabel ?socialClassificationLabel
         ?placeOfDeathLabel ?placeOfDeathCoords ?mannerOfDeathLabel ?detentionLocationLabel ?detentionLocationCoords
-        ?investigationStart ?investigationEnd
+        ?investigationStart ?investigationEnd ?investigationStartPrecision ?investigationEndPrecision
         
         (GROUP_CONCAT(DISTINCT ?chargeWithQualifier; separator=\' | \') as ?charges)
         (GROUP_CONCAT(DISTINCT ?ritualObjectLabel; separator=\' | \') as ?ritualObjects)
@@ -484,10 +498,13 @@ class SparqlQuery {
           #### INVESTIGATION ####
         
           OPTIONAL {
-            ?investigation wdt:P921 ?item .
-            ?investigation wdt:P31 wd:Q66458810 ;
-                           wdt:P580|wdt:P585 ?investigationStart ;
-            OPTIONAL { ?investigation wdt:P582 ?investigationEnd } .
+             ?investigation wdt:P921 ?item .
+             ?investigation wdt:P31 wd:Q66458810 ;
+                            wdt:P580|wdt:P585 ?investigationStart ;
+                            OPTIONAL { ?investigation wdt:P582 ?investigationEnd } .
+             OPTIONAL {?investigation p:P580/psv:P580 [ wikibase:timePrecision ?investigationStartPrecision ] }.
+             
+             OPTIONAL {?investigation p:P582/psv:P582 [ wikibase:timePrecision ?investigationEndPrecision ] } .
         
             # CHARGE
             OPTIONAL {
@@ -518,7 +535,8 @@ class SparqlQuery {
         
         GROUP BY ?item ?itemLabel ?investigationDate ?residenceLabel ?residenceCoords ?sexLabel ?link ?trialLabel
         ?occupationLabel ?socialClassificationLabel ?placeOfDeathLabel ?placeOfDeathCoords ?mannerOfDeathLabel
-        ?detentionLocationLabel ?detentionLocationCoords ?investigation ?investigationStart ?investigationEnd';
+        ?detentionLocationLabel ?detentionLocationCoords ?investigation ?investigationStart ?investigationEnd
+        ?investigationStartPrecision ?investigationEndPrecision';
 
     public function __construct(private string $type, private string $baseUrl, private Client $client)
     {
@@ -533,10 +551,10 @@ class SparqlQuery {
 
         $this->setQuery();
 
-        if (file_exists($this->fileName) && filemtime($this->fileName) > strtotime("-1 day")) {
-            echo file_get_contents($this->fileName);
-            exit;
-        }
+        //  if (file_exists($this->fileName) && filemtime($this->fileName) > strtotime("-1 day")) {
+        //      echo file_get_contents($this->fileName);
+        //      exit;
+        //  }
 
         $response = $this->client->request(
             'POST',
