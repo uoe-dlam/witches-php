@@ -598,7 +598,7 @@ class SparqlQuery {
 $sparqlQuery = new SparqlQuery(
     $_REQUEST['type'] ?? 'full',
     'https://query.wikidata.org/sparql',
-    new Client(['headers' => ['Accept' => 'application/sparql-results+json', 'Content-Type' =>'application/sparql-query']])
+    new Client(['headers' => ['Accept' => 'application/sparql-results+json', 'Content-Type' =>'application/sparql-query', 'User-Agent' => 'UoE DLAM/1.0 https://witches.is.ed.ac.uk/ ltw-apps-dev@ed.ac.uk']])
 );
 
 $sparqlQuery->handle();
